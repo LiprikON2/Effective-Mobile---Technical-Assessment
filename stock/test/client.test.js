@@ -9,9 +9,9 @@ const port = app.get('port')
 const appUrl = `http://${app.get('host')}:${port}`
 
 describe('client tests', () => {
-  const client = createClient(rest(appUrl).axios(axios))
+    const client = createClient(rest(appUrl).axios(axios))
 
-  it('initialized the client', () => {
-    assert.ok(client)
-  })
+    it('initialized the client', () => {
+        assert.ok(client)
+    })
 })

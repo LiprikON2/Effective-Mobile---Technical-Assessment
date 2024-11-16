@@ -11,11 +11,11 @@ import authenticationClient from '@feathersjs/authentication-client'
  * @returns The Feathers client application
  */
 export const createClient = (connection, authenticationOptions = {}) => {
-  const client = feathers()
+    const client = feathers()
 
-  client.configure(connection)
-  client.configure(authenticationClient(authenticationOptions))
-  client.set('connection', connection)
+    client.configure(connection)
+    client.configure(authenticationClient(authenticationOptions))
+    client.set('connection', connection)
 
-  return client
+    return client
 }

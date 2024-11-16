@@ -1,4 +1,4 @@
-version: '3.8' 
+version: "3.8"
 
 name: store
 services:
@@ -7,14 +7,14 @@ services:
       context: ./stock
       dockerfile: Dockerfile
     ports:
-      - "3030:3030"  # host:container
+      - "3030:3030" # host:container
     environment:
       NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
 
   # stock-history:
   #   build:
-  #     context: ./stock-history  
-  #     dockerfile: Dockerfile  
+  #     context: ./stock-history
+  #     dockerfile: Dockerfile
   #   ports:
   #     - "3031:3030"  # host:container
   #   environment:
@@ -23,7 +23,7 @@ services:
   db:
     image: postgres:latest
     volumes:
-      - pgdata:/var/lib/postgresql/data  # Persists PostgreSQL data
+      - pgdata:/var/lib/postgresql/data # Persists PostgreSQL data
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -34,4 +34,4 @@ services:
       - "15432:5432" # host:container
 
 volumes:
-  pgdata:  # Named volume to make PostgreSQL data persist
+  pgdata: # Named volume to make PostgreSQL data persist
