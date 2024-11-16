@@ -9,7 +9,7 @@ services:
     ports:
       - "3030:3030"  # host:container
     environment:
-      DATABASE_URL: postgres://user:password@db:5432/store
+      NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
 
   # stock-history:
   #   build:
@@ -18,7 +18,7 @@ services:
   #   ports:
   #     - "3031:3030"  # host:container
   #   environment:
-  #     DATABASE_URL: postgres://user:password@db:5432/store
+  #     DATABASE_URL: postgres://user:password@db:5432/${POSTGRES_DB}
 
   db:
     image: postgres:latest
