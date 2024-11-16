@@ -1,0 +1,37 @@
+version: '3.8' 
+
+name: store
+services:
+  stock:
+    build:
+      context: ./stock
+      dockerfile: Dockerfile
+    ports:
+      - "3030:3030"  # host:container
+    environment:
+      DATABASE_URL: postgres://user:password@db:5432/store
+
+  # stock-history:
+  #   build:
+  #     context: ./stock-history  
+  #     dockerfile: Dockerfile  
+  #   ports:
+  #     - "3031:3030"  # host:container
+  #   environment:
+  #     DATABASE_URL: postgres://user:password@db:5432/store
+
+  db:
+    image: postgres:latest
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Persists PostgreSQL data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    # (optionally) Exposes database to the host machine
+    ports:
+      - "15432:5432" # host:container
+
+volumes:
+  pgdata:  # Named volume to make PostgreSQL data persist
