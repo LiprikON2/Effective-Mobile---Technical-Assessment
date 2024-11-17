@@ -1,3 +1,5 @@
+
+
 ### Running
 
 #### 1. Set up environment variables
@@ -24,3 +26,16 @@ docker-compose --profile prod up --build
     -   http://localhost:3031/
 -   Shared PostgreSQL `store` database
     -   `psql postgres://user:password@localhost:15432/store`
+
+
+### Making migrations
+
+For auth
+```bash
+(cd ./auth && npm run migrate:make -- init)
+```
+
+For stock
+```bash
+(cd ./stock && npm run migrate:make -- init)
+```

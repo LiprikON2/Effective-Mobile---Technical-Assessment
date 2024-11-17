@@ -1,6 +1,38 @@
 name: store
 
 services:
+    auth:
+        profiles: [prod]
+        build:
+            context: ./auth
+            dockerfile: Dockerfile
+        ports:
+            - '3029:3030' # host:container
+        environment:
+            NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
+
+    auth-dev:
+        profiles: [dev]
+        build:
+            context: ./auth
+            dockerfile: Dockerfile
+        command: npm run migrate && npm run dev
+        # nodemon fix
+        # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
+        develop:
+            watch:
+                - action: sync
+                  path: ./auth/src
+                  target: /usr/src/app/src # Based on Dockerfile's WORKDIR
+                  ignore:
+                      - node_modules/
+                - action: rebuild
+                  path: ./auth/package.json
+        ports:
+            - '3029:3030' # host:container
+        environment:
+            NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
+
     stock:
         profiles: [prod]
         build:
@@ -16,7 +48,7 @@ services:
         build:
             context: ./stock
             dockerfile: Dockerfile
-        command: npm run dev
+        command: npm run migrate && npm run dev
         # nodemon fix
         # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
         develop:
