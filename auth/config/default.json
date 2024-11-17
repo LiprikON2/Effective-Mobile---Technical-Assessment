@@ -10,5 +10,29 @@
     "postgresql": {
         "client": "pg",
         "connection": "postgres://postgres:@localhost:5432/store"
+    },
+    "authentication": {
+        "entity": "user",
+        "service": "users",
+        "secret": "O01h40cQc6/LA3o/auZ23u18hSYgZ5lx",
+        "authStrategies": ["jwt", "local"],
+        "jwtOptions": {
+            "header": {
+                "typ": "access"
+            },
+            "audience": "https://yourdomain.com",
+            "algorithm": "HS256",
+            "expiresIn": "1d"
+        },
+        "local": {
+            "usernameField": "email",
+            "passwordField": "password"
+        },
+        "oauth": {
+            "github": {
+                "key": "<Client ID>",
+                "secret": "<Client secret>"
+            }
+        }
     }
 }
