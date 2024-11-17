@@ -18,9 +18,9 @@ docker-compose --profile prod up --build
 
 #### 3. Interact with containers
 
-- Stock service
-  - http://localhost:3030/
-- Stock history service
-  - http://localhost:3031/
-- Shared PostgreSQL `store` database
-  - `psql postgres://user:password@localhost:15432/store`
+-   Stock service
+    -   http://localhost:3030/
+-   Stock history service
+    -   http://localhost:3031/
+-   Shared PostgreSQL `store` database
+    -   `psql postgres://user:password@localhost:15432/store`

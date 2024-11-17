@@ -1,59 +1,59 @@
 name: store
 
 services:
-  stock:
-    profiles: [prod]
-    build:
-      context: ./stock
-      dockerfile: Dockerfile
-    ports:
-      - "3030:3030" # host:container
-    environment:
-      NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
+    stock:
+        profiles: [prod]
+        build:
+            context: ./stock
+            dockerfile: Dockerfile
+        ports:
+            - '3030:3030' # host:container
+        environment:
+            NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
 
-  stock-dev:
-    profiles: [dev]
-    build:
-      context: ./stock
-      dockerfile: Dockerfile
-    command: npm run dev
-    # nodemon fix
-    # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
-    develop:
-      watch:
-        - action: sync
-          path: ./stock/src
-          target: /usr/src/app/src # Based on Dockerfile's WORKDIR
-          ignore: 
-            - node_modules/
-        - action: rebuild
-          path: ./stock/package.json
-    ports:
-      - "3030:3030" # host:container
-    environment:
-      NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
+    stock-dev:
+        profiles: [dev]
+        build:
+            context: ./stock
+            dockerfile: Dockerfile
+        command: npm run dev
+        # nodemon fix
+        # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
+        develop:
+            watch:
+                - action: sync
+                  path: ./stock/src
+                  target: /usr/src/app/src # Based on Dockerfile's WORKDIR
+                  ignore:
+                      - node_modules/
+                - action: rebuild
+                  path: ./stock/package.json
+        ports:
+            - '3030:3030' # host:container
+        environment:
+            NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
 
-  # stock-history:
-  #   build:
-  #     context: ./stock-history
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3031:3030"  # host:container
-  #   environment:
-  #     DATABASE_URL: postgres://user:password@db:5432/${POSTGRES_DB}
+    # stock-history:
+    #   build:
+    #     context: ./stock-history
+    #     dockerfile: Dockerfile
+    #   ports:
+    #     - "3031:3030"  # host:container
+    #   environment:
+    #     DATABASE_URL: postgres://user:password@db:5432/${POSTGRES_DB}
 
-  db:
-    image: postgres:latest
-    volumes:
-      - pgdata:/var/lib/postgresql/data # Persists PostgreSQL data
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    db:
+        image: postgres:latest
+        volumes:
+            - pgdata:/var/lib/postgresql/data # Persists PostgreSQL data
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
-    # (optionally) Exposes database to the host machine
-    ports:
-      - "15432:5432" # host:container
+        # (optionally) Exposes database to the host machine
+        ports:
+            - '15432:5432' # host:container
 
 volumes:
-  pgdata: # Named volume to make PostgreSQL data persist
+    pgdata: # Named volume to make PostgreSQL data persist
