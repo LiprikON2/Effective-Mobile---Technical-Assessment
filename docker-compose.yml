@@ -1,11 +1,33 @@
-version: "3.8"
-
 name: store
+
 services:
   stock:
+    profiles: [prod]
     build:
       context: ./stock
       dockerfile: Dockerfile
+    ports:
+      - "3030:3030" # host:container
+    environment:
+      NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
+
+  stock-dev:
+    profiles: [dev]
+    build:
+      context: ./stock
+      dockerfile: Dockerfile
+    command: npm run dev
+    # nodemon fix
+    # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
+    develop:
+      watch:
+        - action: sync
+          path: ./stock/src
+          target: /usr/src/app/src # Based on Dockerfile's WORKDIR
+          ignore: 
+            - node_modules/
+        - action: rebuild
+          path: ./stock/package.json
     ports:
       - "3030:3030" # host:container
     environment:

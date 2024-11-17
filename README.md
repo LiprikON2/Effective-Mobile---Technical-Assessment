@@ -9,7 +9,11 @@ cp .env.example .env
 #### 2. Run `docker-compose`
 
 ```bash
-docker-compose up --build
+docker-compose --profile dev up --build --watch
+```
+
+```bash
+docker-compose --profile prod up --build
 ```
 
 #### 3. Interact with containers
