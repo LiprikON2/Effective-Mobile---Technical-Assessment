@@ -9,7 +9,7 @@
     },
     "postgresql": {
         "client": "pg",
-        "connection": "postgres://postgres:@localhost:5432/store"
+        "connection": "postgres://postgres:@localhost:5432/postgres"
     },
     "authentication": {
         "entity": "user",

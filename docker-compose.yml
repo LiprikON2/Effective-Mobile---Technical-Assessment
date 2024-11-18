@@ -8,15 +8,18 @@ services:
             dockerfile: Dockerfile
         ports:
             - '3029:3030' # host:container
+        depends_on:
+            db:
+                condition: service_healthy
         environment:
-            NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
-
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "auth"}}}'
+    
     auth-dev:
         profiles: [dev]
         build:
             context: ./auth
             dockerfile: Dockerfile
-        command: npm run migrate && npm run dev
+        command: sh -c "npm run migrate && npm run dev"
         # nodemon fix
         # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
         develop:
@@ -30,8 +33,11 @@ services:
                   path: ./auth/package.json
         ports:
             - '3029:3030' # host:container
+        depends_on:
+            db:
+                condition: service_healthy
         environment:
-            NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "auth"}}}'
 
     stock:
         profiles: [prod]
@@ -40,15 +46,20 @@ services:
             dockerfile: Dockerfile
         ports:
             - '3030:3030' # host:container
+
+        # Checks if db ready to accept connections
+        depends_on:
+            db:
+                condition: service_healthy
         environment:
-            NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
 
     stock-dev:
         profiles: [dev]
         build:
             context: ./stock
             dockerfile: Dockerfile
-        command: npm run migrate && npm run dev
+        command: sh -c "npm run migrate && npm run dev"
         # nodemon fix
         # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
         develop:
@@ -62,8 +73,13 @@ services:
                   path: ./stock/package.json
         ports:
             - '3030:3030' # host:container
+
+        # Checks if db ready to accept connections
+        depends_on:
+            db:
+                condition: service_healthy
         environment:
-            NODE_CONFIG: '{"postgresql":{"connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"}}'
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
 
     # stock-history:
     #   build:
@@ -79,9 +95,17 @@ services:
         volumes:
             - pgdata:/var/lib/postgresql/data # Persists PostgreSQL data
         environment:
-            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_DB: postgres
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        
+        # Makes possible `condition: service_healthy` check
+        healthcheck:
+            test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "$POSTGRES_USER" ]
+            interval: 30s
+            timeout: 60s
+            retries: 5
+            start_period: 80s  
 
         # (optionally) Exposes database to the host machine
         ports:
