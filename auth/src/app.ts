@@ -3,6 +3,7 @@ import { feathers } from '@feathersjs/feathers'
 import configuration from '@feathersjs/configuration'
 import { koa, rest, bodyParser, errorHandler, parseAuthentication, cors, serveStatic } from '@feathersjs/koa'
 import socketio from '@feathersjs/socketio'
+import swagger from 'feathers-swagger'
 
 import { configurationValidator } from './configuration'
 import type { Application } from './declarations'
@@ -16,6 +17,21 @@ const app: Application = koa(feathers())
 
 // Load our app configuration (see config/ folder)
 app.configure(configuration(configurationValidator))
+
+app.configure(
+    swagger({
+        docsPath: '/docs',
+        specs: {
+            info: {
+                title: 'Authentication microservice',
+                description: 'Used to access stock and stock history microservices',
+                version: '1.0.0'
+            },
+            schemes: ['http', 'https']
+        },
+        ui: swagger.swaggerUI({})
+    })
+)
 
 // Set up Koa middleware
 app.use(cors())
