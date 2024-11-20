@@ -29,16 +29,23 @@ docker-compose --profile prod up --build
     - `psql postgres://user:password@localhost:15432/store`
 
 
+#### 4. (optional) Install dependencies locally
+
+```bash
+(cd stock && npm i) & (cd auth && npm i)
+```
+
+
 ### Making migrations
 
 For auth
 ```bash
-(cd ./auth && npm run migrate:make -- init)
+(cd ./auth && npm run migrate:make -- NAME)
 ```
 
 For stock
 ```bash
-(cd ./stock && npm run migrate:make -- init)
+(cd ./stock && npm run migrate:make -- NAME)
 ```
 
 ### Structure

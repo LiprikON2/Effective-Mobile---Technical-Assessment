@@ -1,12 +1,12 @@
 import { KnexService } from '@feathersjs/knex'
 
 // By default calls the standard Knex adapter service methods but can be customized with your own functionality.
-export class StockService extends KnexService {}
+export class StocksService extends KnexService {}
 
 export const getOptions = (app) => {
     return {
         paginate: app.get('paginate'),
         Model: app.get('postgresqlClient'),
-        name: 'stock'
+        name: 'stocks'
     }
 }

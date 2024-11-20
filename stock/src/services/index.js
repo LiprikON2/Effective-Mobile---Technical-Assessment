@@ -1,9 +1,6 @@
-import { stock } from './stock/stock.js'
-import { TestService } from './TestService.js'
-
+import { stocks } from './stocks/stocks.js'
 export const services = (app) => {
-    app.configure(stock)
+    app.configure(stocks)
 
     // All services will be registered here
-    app.use('test', new TestService())
 }
