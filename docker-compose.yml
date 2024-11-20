@@ -14,6 +14,7 @@ services:
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "auth"}}}'
     
+
     auth-dev:
         profiles: [dev]
         build:
@@ -39,6 +40,7 @@ services:
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "auth"}}}'
 
+
     stock:
         profiles: [prod]
         build:
@@ -46,13 +48,13 @@ services:
             dockerfile: Dockerfile
         ports:
             - '3030:3030' # host:container
-
         # Checks if db ready to accept connections
         depends_on:
             db:
                 condition: service_healthy
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
+
 
     stock-dev:
         profiles: [dev]
@@ -73,13 +75,13 @@ services:
                   path: ./stock/package.json
         ports:
             - '3030:3030' # host:container
-
         # Checks if db ready to accept connections
         depends_on:
             db:
                 condition: service_healthy
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
+
 
     # stock-history:
     #   build:
@@ -90,6 +92,7 @@ services:
     #   environment:
     #     DATABASE_URL: postgres://user:password@db:5432/${POSTGRES_DB}
 
+
     db:
         image: postgres:latest
         volumes:
@@ -98,7 +101,6 @@ services:
             POSTGRES_DB: postgres
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        
         # Makes possible `condition: service_healthy` check
         healthcheck:
             test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "$POSTGRES_USER" ]
@@ -106,8 +108,7 @@ services:
             timeout: 60s
             retries: 5
             start_period: 80s  
-
-        # (optionally) Exposes database to the host machine
+        # (optional) Exposes database to the host machine
         ports:
             - '15432:5432' # host:container
 

@@ -1,9 +1,10 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/client.html
 import { feathers } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
-export {}
 
-export {}
+import { stocksClient } from './services/stocks/stocks.shared'
+import { productsClient } from './services/products/products.shared'
+import { shopsClient } from './services/shops/shops.shared'
 
 /**
  * Returns a  client for the stock app.
@@ -20,9 +21,9 @@ export const createClient = (connection, authenticationOptions = {}) => {
     client.configure(authenticationClient(authenticationOptions))
     client.set('connection', connection)
 
-    client.configure(stockClient)
-
     client.configure(stocksClient)
+    client.configure(productsClient)
+    client.configure(shopsClient)
 
     return client
 }

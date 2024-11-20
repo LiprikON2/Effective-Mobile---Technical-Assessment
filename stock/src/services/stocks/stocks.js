@@ -1,5 +1,4 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-import { authenticate } from '@feathersjs/authentication'
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import {
@@ -14,6 +13,7 @@ import {
 } from './stocks.schema.js'
 import { StocksService, getOptions } from './stocks.class.js'
 import { stocksPath, stocksMethods } from './stocks.shared.js'
+import { authenticate } from '@feathersjs/authentication'
 
 export * from './stocks.class.js'
 export * from './stocks.schema.js'
@@ -30,11 +30,14 @@ export const stocks = (app) => {
     // Initialize hooks
     app.service(stocksPath).hooks({
         around: {
-            all: [
-                authenticate('jwt'),
-                schemaHooks.resolveExternal(stocksExternalResolver),
-                schemaHooks.resolveResult(stocksResolver)
-            ]
+            all: [schemaHooks.resolveExternal(stocksExternalResolver)]
+
+            // Default feathers auth
+            // all: [
+            //     authenticate('jwt'),
+            //     schemaHooks.resolveExternal(stocksExternalResolver),
+            //     schemaHooks.resolveResult(stocksResolver)
+            // ]
         },
         before: {
             all: [
