@@ -1,6 +1,3 @@
-
-
-
 ### Running
 
 #### 1. Set up environment variables
@@ -24,10 +21,12 @@ docker-compose --profile prod up --build
 
 #### 3. Interact with containers
 
-- Stock service
-    - http://localhost:3030/
-- Stock history service
-    - http://localhost:3031/
+- Auth service swagger docs
+    - http://localhost:3029/docs
+- Stock service swagger docs
+    - http://localhost:3030/docs
+- Stock history service swagger docs
+    - http://localhost:3031/docs
 - Shared PostgreSQL `store` database
     - `psql postgres://user:password@localhost:15432/store`
 

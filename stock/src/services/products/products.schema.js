@@ -32,10 +32,14 @@ export const productsPatchValidator = getValidator(productsPatchSchema, dataVali
 export const productsPatchResolver = resolve({})
 
 // Schema for allowed query properties
-export const productsQueryProperties = Type.Pick(productsSchema, ['id', 'name'])
+export const productsQueryProperties = Type.Pick(productsSchema, ['id', 'name', 'plu'])
 export const productsQuerySchema = Type.Intersect(
     [
-        querySyntax(productsQueryProperties),
+        querySyntax(productsQueryProperties, {
+            name: {
+                $ilike: Type.String()
+            }
+        }),
         // Add additional query properties here
         Type.Object({}, { additionalProperties: false })
     ],
