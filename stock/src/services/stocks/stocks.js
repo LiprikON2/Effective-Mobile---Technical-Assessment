@@ -30,14 +30,12 @@ export const stocks = (app) => {
     // Initialize hooks
     app.service(stocksPath).hooks({
         around: {
-            all: [schemaHooks.resolveExternal(stocksExternalResolver)]
-
-            // Default feathers auth
-            // all: [
-            //     authenticate('jwt'),
-            //     schemaHooks.resolveExternal(stocksExternalResolver),
-            //     schemaHooks.resolveResult(stocksResolver)
-            // ]
+            all: [
+                // Default feathers auth
+                //     authenticate('jwt'),
+                schemaHooks.resolveExternal(stocksExternalResolver),
+                schemaHooks.resolveResult(stocksResolver)
+            ]
         },
         before: {
             all: [
