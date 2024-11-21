@@ -7,6 +7,7 @@ export const up = async (knex) => {
         table.dropColumn('text')
         table.integer('product_id').notNullable().references('id').inTable('products').onDelete('CASCADE')
         table.integer('shop_id').notNullable().references('id').inTable('shops').onDelete('CASCADE')
+        table.bigint('created_at').notNullable()
 
         table.integer('shelf_quantity').notNullable().defaultTo(0)
         table.integer('ordered_quantity').notNullable().defaultTo(0)
@@ -38,6 +39,7 @@ export const down = async (knex) => {
         table.dropColumn('shop_id')
         table.dropColumn('shelf_quantity')
         table.dropColumn('ordered_quantity')
+        table.dropColumn('created_at')
 
         table.dropChecks()
     })

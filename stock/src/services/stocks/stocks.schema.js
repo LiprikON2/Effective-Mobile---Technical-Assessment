@@ -11,7 +11,7 @@ export const stocksSchema = Type.Object(
         id: Type.Number(),
         shelf_quantity: Type.Optional(Type.Number()),
         ordered_quantity: Type.Optional(Type.Number()),
-        // createdAt: Type.Number(),
+        created_at: Type.Number(),
 
         product_id: Type.Number(),
         product: Type.Ref(productsSchema),
@@ -45,9 +45,9 @@ export const stocksDataSchema = Type.Pick(
 )
 export const stocksDataValidator = getValidator(stocksDataSchema, dataValidator)
 export const stocksDataResolver = resolve({
-    // createdAt: async () => {
-    //     return Date.now()
-    // }
+    created_at: async () => {
+        return Date.now()
+    }
 })
 
 // Schema for updating existing entries
@@ -58,11 +58,7 @@ export const stocksPatchValidator = getValidator(stocksPatchSchema, dataValidato
 export const stocksPatchResolver = resolve({})
 
 // Schema for allowed query properties
-export const stocksQueryProperties = Type.Pick(stocksSchema, [
-    'id',
-    /* 'createdAt', */ 'product_id',
-    'shop_id'
-])
+export const stocksQueryProperties = Type.Pick(stocksSchema, ['id', 'created_at', 'product_id', 'shop_id'])
 export const stocksQuerySchema = Type.Intersect(
     [
         querySyntax(stocksQueryProperties),
