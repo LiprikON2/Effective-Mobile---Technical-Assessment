@@ -71,7 +71,15 @@ export const stocksPatchValidator = getValidator(stocksPatchSchema, dataValidato
 export const stocksPatchResolver = resolve({})
 
 // Schema for allowed query properties
-export const stocksQueryProperties = Type.Pick(stocksSchema, ['id', 'created_at', 'product_id', 'shop_id'])
+export const stocksQueryProperties = Type.Pick(stocksSchema, [
+    'id',
+    'created_at',
+    'product_id',
+    'shop_id',
+    'shelf_quantity',
+    'ordered_quantity',
+    'total_quantity'
+])
 export const stocksQuerySchema = Type.Intersect(
     [
         querySyntax(stocksQueryProperties),
