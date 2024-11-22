@@ -7,6 +7,8 @@ services:
         build:
             context: ./stock
             dockerfile: Dockerfile
+        command: sh -c "npm run migrate && npm run start"
+        hostname: stock
         ports:
             - '3030:3030' # host:container
         # Checks if db and rabbit are ready to accept connections
@@ -52,8 +54,10 @@ services:
     stock-history:
         profiles: [prod]
         build:
-            context: ./stock
+            context: ./stock-history
             dockerfile: Dockerfile
+        command: sh -c "npm run migrate && npm run compile && npm start"
+        hostname: stock-history
         ports:
             - '3031:3030' # host:container
         # Checks if db and rabbit are ready to accept connections
