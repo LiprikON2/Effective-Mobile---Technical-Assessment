@@ -17,6 +17,8 @@
 > - SQL Query Builder: Knex.js
 > - DBMS: PostgreSQL
 
+![](https://i.imgur.com/7JDUmPs.png)
+
 
  У товара могут быть следующие поля:
 
@@ -98,6 +100,8 @@
 > - HTTP framework: Koa.js
 > - SQL Query Builder: Knex.js
 > - DBMS: PostgreSQL
+
+![](https://i.imgur.com/MdPIPFP.png)
 
 
 
