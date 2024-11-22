@@ -26,6 +26,7 @@ export const queueChange = async (context) => {
         delete result['id']
     }
     // TODO make a proper fix
+    // - created_at is bigint and since JSON doens't have bigints either feathers or postgres reuturns them as string
     if ('created_at' in result) result['created_at'] = parseInt(result['created_at'])
 
     const change = { service, action, result, timestamp }
