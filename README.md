@@ -102,12 +102,19 @@
 Сервис "истории действий с товарами или остатками" должен иметь endpoint, который отдаст историю действий с фильтрами по:
 
 - `shop_id`
+  - [`GET localhost:3031/stocks-history?shop_id=1`](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?workspaceId=d4697269-b18e-44d0-a0d8-07b2e8e02143&entity=request-2e4a1d43-d86a-4fa9-9f8e-ff075b54c16e)
 - `plu`
+  - [`GET localhost:3031/products-history?plu=9999`](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?workspaceId=d4697269-b18e-44d0-a0d8-07b2e8e02143&entity=request-791d6adf-c5b3-4042-a8f2-4e0a87115d74)
 - `date` (с-по)
+  - [`GET localhost:3031/products-history?$and[0][timestamp][$gte]=1732283898867&$and[1][timestamp][$lte]=1732283898978`](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?workspaceId=d4697269-b18e-44d0-a0d8-07b2e8e02143&entity=request-bfa9472f-bdbe-49e8-bf55-3da448385f83)
 - `action`
+  - [`GET localhost:3031/stocks-history?action=patched`](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?workspaceId=d4697269-b18e-44d0-a0d8-07b2e8e02143&entity=request-261d586b-3bb8-4e82-b9f6-fc11dc9c5a93)
 
 и постраничной навигацией. Фреймворк так же может быть любой, но не nest. Один из сервисов должен быть на JS, для второго можно использовать TS. СУБД - postgresql
 
+
+
+___
 
 
 ### Running
