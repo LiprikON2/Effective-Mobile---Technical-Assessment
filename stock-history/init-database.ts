@@ -10,14 +10,12 @@ async function createDatabase() {
     const db = knex(config)
 
     try {
-        console.log(`CREATE DATABASE ${database}`)
         await db.raw(`CREATE DATABASE ${database}`)
     } catch (err) {
         // Ignore database already exists error
         // @ts-ignore
         if (!err.code === '42P04') throw err
     }
-
     await db.destroy()
 }
 

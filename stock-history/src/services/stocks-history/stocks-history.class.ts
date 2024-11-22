@@ -3,7 +3,7 @@ import type { Params } from '@feathersjs/feathers'
 import { KnexService } from '@feathersjs/knex'
 import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
-import type { Application } from '../../declarations'
+import type { Application, ServiceTypes } from '../../declarations'
 import type {
     StocksHistory,
     StocksHistoryData,
@@ -21,7 +21,10 @@ export class StocksHistoryService<ServiceParams extends Params = StocksHistoryPa
     StocksHistoryData,
     StocksHistoryParams,
     StocksHistoryPatch
-> {}
+> {
+    async setup(app: Application, path: keyof ServiceTypes) {}
+    async teardown(app: Application, path: keyof ServiceTypes) {}
+}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {
     return {

@@ -3,13 +3,15 @@ import type { Params } from '@feathersjs/feathers'
 import { KnexService } from '@feathersjs/knex'
 import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
-import type { Application } from '../../declarations'
+import type { Application, ServiceTypes } from '../../declarations'
 import type {
     ProductsHistory,
     ProductsHistoryData,
     ProductsHistoryPatch,
     ProductsHistoryQuery
 } from './products-history.schema'
+import { productsHistoryPath } from './products-history.shared'
+import { initRabbitMQConsumer } from '../../hooks/init-rabbitmq-consumer'
 
 export type { ProductsHistory, ProductsHistoryData, ProductsHistoryPatch, ProductsHistoryQuery }
 
@@ -21,7 +23,12 @@ export class ProductsHistoryService<ServiceParams extends Params = ProductsHisto
     ProductsHistoryData,
     ProductsHistoryParams,
     ProductsHistoryPatch
-> {}
+> {
+    async setup(app: Application, path: keyof ServiceTypes) {
+        initRabbitMQConsumer('products', path, app)
+    }
+    async teardown(app: Application, path: keyof ServiceTypes) {}
+}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {
     return {

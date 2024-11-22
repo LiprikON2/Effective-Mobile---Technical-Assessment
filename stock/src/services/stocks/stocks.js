@@ -14,7 +14,7 @@ import {
 import { StocksService, getOptions } from './stocks.class.js'
 import { stocksPath, stocksMethods } from './stocks.shared.js'
 import { authenticate } from '@feathersjs/authentication'
-import { logChange } from '../../hooks/log-change.js'
+import { queueChange } from '../../hooks/queue-change.js'
 
 export * from './stocks.class.js'
 export * from './stocks.schema.js'
@@ -58,9 +58,9 @@ export const stocks = (app) => {
         },
         after: {
             all: [],
-            create: [logChange],
-            patch: [logChange],
-            remove: [logChange]
+            create: [queueChange],
+            patch: [queueChange],
+            remove: [queueChange]
         },
         error: {
             all: []

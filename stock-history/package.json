@@ -60,6 +60,7 @@
         "@feathersjs/socketio": "^5.0.31",
         "@feathersjs/transport-commons": "^5.0.31",
         "@feathersjs/typebox": "^5.0.31",
+        "amqplib": "^0.10.4",
         "feathers-swagger": "^3.0.0",
         "knex": "^3.1.0",
         "koa-mount": "^4.0.0",
@@ -71,6 +72,7 @@
     "devDependencies": {
         "@feathersjs/cli": "^5.0.31",
         "@feathersjs/rest-client": "^5.0.31",
+        "@types/amqplib": "^0.10.5",
         "@types/mocha": "^10.0.9",
         "@types/node": "^22.8.4",
         "axios": "^1.7.7",

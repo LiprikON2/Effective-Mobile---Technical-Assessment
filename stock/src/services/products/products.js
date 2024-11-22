@@ -13,7 +13,7 @@ import {
 } from './products.schema.js'
 import { ProductsService, getOptions } from './products.class.js'
 import { productsPath, productsMethods } from './products.shared.js'
-import { logChange } from '../../hooks/log-change.js'
+import { queueChange } from '../../hooks/queue-change.js'
 
 export * from './products.class.js'
 export * from './products.schema.js'
@@ -50,13 +50,13 @@ export const products = (app) => {
                 schemaHooks.validateData(productsPatchValidator),
                 schemaHooks.resolveData(productsPatchResolver)
             ],
-            remove: []
+            remove: [queueChange]
         },
         after: {
             all: [],
-            create: [logChange],
-            patch: [logChange],
-            remove: [logChange]
+            create: [queueChange],
+            patch: [queueChange],
+            remove: [queueChange]
         },
         error: {
             all: []

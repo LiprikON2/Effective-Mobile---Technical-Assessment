@@ -48,9 +48,11 @@ services:
             dockerfile: Dockerfile
         ports:
             - '3030:3030' # host:container
-        # Checks if db ready to accept connections
+        # Checks if db and rabbit are ready to accept connections
         depends_on:
             db:
+                condition: service_healthy
+            rabbitmq:
                 condition: service_healthy
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
@@ -76,9 +78,11 @@ services:
         hostname: stock
         ports:
             - '3030:3030' # host:container
-        # Checks if db ready to accept connections
+        # Checks if db and rabbit are ready to accept connections
         depends_on:
             db:
+                condition: service_healthy
+            rabbitmq:
                 condition: service_healthy
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
@@ -91,12 +95,14 @@ services:
             dockerfile: Dockerfile
         ports:
             - '3031:3030' # host:container
-        # Checks if db ready to accept connections
+        # Checks if db and rabbit are ready to accept connections
         depends_on:
             db:
                 condition: service_healthy
+            rabbitmq:
+                condition: service_healthy
         environment:
-            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock-history"}}}'
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
 
 
     stock-history-dev:
@@ -119,9 +125,11 @@ services:
         hostname: stock-history
         ports:
             - '3031:3030' # host:container
-        # Checks if db ready to accept connections
+        # Checks if db and rabbit are ready to accept connections
         depends_on:
             db:
+                condition: service_healthy
+            rabbitmq:
                 condition: service_healthy
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
@@ -155,5 +163,22 @@ services:
         ports:
             - '15432:5432' # host:container
 
+
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        healthcheck:
+            test: rabbitmq-diagnostics check_port_connectivity
+            interval: 30s
+            timeout: 30s
+            retries: 10
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+
+
 volumes:
     pgdata: # Named volume to make PostgreSQL data persist
+    rabbitmq_data:
