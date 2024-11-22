@@ -121,7 +121,7 @@
 - `id` - первичный ключ
 - `action` - действие (`created`, `patched`, `updated`, `deleted`)
 - `timestamp` - дата внесения изменения
-- `result_id` - первичный ключ товара
+- `result_id` - первичный ключ остатка
 - `product_id` - товар остатка
 - `shop_id` - магазин остатка
 - `created_at` - дата создания остатка
