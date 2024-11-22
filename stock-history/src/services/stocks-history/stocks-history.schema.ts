@@ -11,7 +11,16 @@ import type { StocksHistoryService } from './stocks-history.class'
 export const stocksHistorySchema = Type.Object(
     {
         id: Type.Number(),
-        text: Type.String()
+        action: Type.String(),
+        timestamp: Type.Number(),
+
+        result_id: Type.Number(),
+        product_id: Type.Number(),
+        shop_id: Type.Number(),
+        created_at: Type.Number(),
+        shelf_quantity: Type.Number(),
+        ordered_quantity: Type.Number(),
+        total_quantity: Type.Number()
     },
     { $id: 'StocksHistory', additionalProperties: false }
 )
@@ -22,9 +31,23 @@ export const stocksHistoryResolver = resolve<StocksHistory, HookContext<StocksHi
 export const stocksHistoryExternalResolver = resolve<StocksHistory, HookContext<StocksHistoryService>>({})
 
 // Schema for creating new entries
-export const stocksHistoryDataSchema = Type.Pick(stocksHistorySchema, ['text'], {
-    $id: 'StocksHistoryData'
-})
+export const stocksHistoryDataSchema = Type.Pick(
+    stocksHistorySchema,
+    [
+        'action',
+        'result_id',
+        'timestamp',
+        'product_id',
+        'shop_id',
+        'created_at',
+        'shelf_quantity',
+        'ordered_quantity',
+        'total_quantity'
+    ],
+    {
+        $id: 'StocksHistoryData'
+    }
+)
 export type StocksHistoryData = Static<typeof stocksHistoryDataSchema>
 export const stocksHistoryDataValidator = getValidator(stocksHistoryDataSchema, dataValidator)
 export const stocksHistoryDataResolver = resolve<StocksHistory, HookContext<StocksHistoryService>>({})
@@ -38,7 +61,18 @@ export const stocksHistoryPatchValidator = getValidator(stocksHistoryPatchSchema
 export const stocksHistoryPatchResolver = resolve<StocksHistory, HookContext<StocksHistoryService>>({})
 
 // Schema for allowed query properties
-export const stocksHistoryQueryProperties = Type.Pick(stocksHistorySchema, ['id', 'text'])
+export const stocksHistoryQueryProperties = Type.Pick(stocksHistorySchema, [
+    'id',
+    'action',
+    'result_id',
+    'timestamp',
+    'product_id',
+    'shop_id',
+    'created_at',
+    'shelf_quantity',
+    'ordered_quantity',
+    'total_quantity'
+])
 export const stocksHistoryQuerySchema = Type.Intersect(
     [
         querySyntax(stocksHistoryQueryProperties),

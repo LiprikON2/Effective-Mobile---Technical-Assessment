@@ -10,6 +10,7 @@ import type {
     StocksHistoryPatch,
     StocksHistoryQuery
 } from './stocks-history.schema'
+import { initRabbitMQConsumer } from '../../hooks/init-rabbitmq-consumer'
 
 export type { StocksHistory, StocksHistoryData, StocksHistoryPatch, StocksHistoryQuery }
 
@@ -22,7 +23,9 @@ export class StocksHistoryService<ServiceParams extends Params = StocksHistoryPa
     StocksHistoryParams,
     StocksHistoryPatch
 > {
-    async setup(app: Application, path: keyof ServiceTypes) {}
+    async setup(app: Application, path: keyof ServiceTypes) {
+        initRabbitMQConsumer('stocks', path, app)
+    }
     async teardown(app: Application, path: keyof ServiceTypes) {}
 }
 

@@ -25,6 +25,8 @@ export const queueChange = async (context) => {
         result['result_id'] = result['id']
         delete result['id']
     }
+    // TODO make a proper fix
+    if ('created_at' in result) result['created_at'] = parseInt(result['created_at'])
 
     const change = { service, action, result, timestamp }
     console.log('Change', change)

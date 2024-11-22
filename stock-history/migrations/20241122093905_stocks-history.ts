@@ -4,8 +4,16 @@ import type { Knex } from 'knex'
 export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable('stocks-history', (table) => {
         table.increments('id')
+        table.string('action').notNullable()
+        table.bigint('timestamp').notNullable()
 
-        table.string('text')
+        table.integer('result_id').notNullable()
+        table.integer('product_id').notNullable()
+        table.integer('shop_id').notNullable()
+        table.bigint('created_at').notNullable()
+        table.integer('shelf_quantity').notNullable()
+        table.integer('ordered_quantity').notNullable()
+        table.integer('total_quantity').notNullable()
     })
 }
 
