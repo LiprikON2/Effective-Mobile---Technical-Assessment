@@ -4,12 +4,11 @@
 ## [Postman docs](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment)
 
 
-### Задание 1
-
+## Задание 1
 > Нужно реализовать 2 сервиса
 
 
-#### Сервис остатков товаров в магазине
+### Сервис остатков товаров в магазине
 
 > [!note] `stock`
 > - Language: JavaScript
@@ -40,16 +39,21 @@
 - `product_id` - товар остатка
 - `shop_id` - магазин остатка
 - `shelf_quantity` - количество остатка на полках
+  - Constraint: `shelf_quantity >= 0`
 - `ordered_quantity` - количество товара в заказе
-
-### Таблица товаров
+  - Constraint: `ordered_quantity >= 0`
+- `total_quantity` - общее количество товара
+  - Constraint: `shelf_quantity + ordered_quantity <= total_quantity`
+- `created_at` - дата создания остатка
+ 
+##### Таблица товаров
 > `products`
 
 - `id` - первичный ключ
 - `plu` - артикул товара
 - `name` - название товара
 
-#### Таблица магазинов
+##### Таблица магазинов
 > `shops`
 
 - `id` - первичный ключ
@@ -85,7 +89,7 @@
             - [`GET localhost:3030/products?plu=9999`](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?workspaceId=d4697269-b18e-44d0-a0d8-07b2e8e02143&entity=request-d8a435a0-e85d-46f0-b7f4-6e2eedc72def)
 
 
-#### Cервис истории действий с товарами
+### Cервис истории действий с товарами
 
 
 > [!note] `stock-history`
@@ -98,6 +102,33 @@
 
 
 В сервис "истории действий с товарами" нужно отправлять все события, которые происходят с товарами или остатками. Общение сервисов может происходить любым способом. 
+
+#### Tаблицы
+
+##### Таблица истории действий с товарами
+> `products-history`
+
+- `id` - первичный ключ
+- `action` - действие (`created`, `patched`, `updated`, `deleted`)
+- `timestamp` - дата внесения изменения
+- `result_id` - первичный ключ товара
+- `name` - название товара
+- `plu` - артикул товара
+
+##### Таблица истории действий с остатками
+> `stocks-history`
+
+- `id` - первичный ключ
+- `action` - действие (`created`, `patched`, `updated`, `deleted`)
+- `timestamp` - дата внесения изменения
+- `result_id` - первичный ключ товара
+- `product_id` - товар остатка
+- `shop_id` - магазин остатка
+- `created_at` - дата создания остатка
+- `shelf_quantity` - количество остатка на полках
+- `ordered_quantity` - количество товара в заказе
+- `total_quantity` - общее количество товара
+
 
 Сервис "истории действий с товарами или остатками" должен иметь endpoint, который отдаст историю действий с фильтрами по:
 
@@ -113,6 +144,12 @@
 и постраничной навигацией. Фреймворк так же может быть любой, но не nest. Один из сервисов должен быть на JS, для второго можно использовать TS. СУБД - postgresql
 
 
+
+### Structure
+
+#### [Database-per-Service vs Shared Instance](https://mts88.medium.com/database-per-service-or-shared-database-e73cfb756aa1)
+
+- [Knex and multiple databases](https://stackoverflow.com/a/57196477)
 
 ___
 
@@ -278,11 +315,3 @@ Modify `package.json`:
 2. Manually fill up `up` and `down` functions ([Example](https://feathersjs.com/guides/basics/schemas#creating-a-migration))
 
 
-### Structure
-
-#### [Database-per-Service vs Shared Instance](https://mts88.medium.com/database-per-service-or-shared-database-e73cfb756aa1)
-
-
-- [Shared Database](https://microservices.io/patterns/data/shared-database.html)
-- [Database per Service](https://microservices.io/patterns/data/database-per-service.html)
-- [Knex and multiple databases](https://stackoverflow.com/a/57196477)
