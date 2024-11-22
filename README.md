@@ -10,7 +10,7 @@
 
 ### Сервис остатков товаров в магазине
 
-> [!note] `stock`
+> [!NOTE] `stock`
 > - Language: JavaScript
 > - Framework: Feathers.js
 > - HTTP framework: Koa.js
@@ -29,7 +29,7 @@
 - Для какого магазина данный остаток
 
 
-> [!warning] Данные денормализованы, их нужно привести к 2-3 нормальной форме
+> [!WARNING] Данные денормализованы, их нужно привести к 2-3 нормальной форме
 
 #### Таблицы после нормализации
 > - [Остатки товара | kassa.bifit.com](https://kassa.bifit.com/wiki/index.php?title=%D0%9E%D1%81%D1%82%D0%B0%D1%82%D0%BA%D0%B8_%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B0)
@@ -94,7 +94,7 @@
 ### Cервис истории действий с товарами
 
 
-> [!note] `stock-history`
+> [!NOTE] `stock-history`
 > - Language: TypeScript
 > - Framework: Feathers.js
 > - HTTP framework: Koa.js
