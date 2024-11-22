@@ -1,5 +1,5 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
-import { resolve, virtual } from '@feathersjs/schema'
+import { queryProperty, resolve, virtual } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import { dataValidator, queryValidator } from '../../validators.js'
 import { shopsSchema } from '../shops/shops.schema.js'
@@ -11,6 +11,7 @@ export const stocksSchema = Type.Object(
         id: Type.Number(),
         shelf_quantity: Type.Optional(Type.Number()),
         ordered_quantity: Type.Optional(Type.Number()),
+        total_quantity: Type.Optional(Type.Number()),
         created_at: Type.Number(),
 
         product_id: Type.Number(),
@@ -44,9 +45,21 @@ export const stocksDataSchema = Type.Pick(
     }
 )
 export const stocksDataValidator = getValidator(stocksDataSchema, dataValidator)
+// @ts-ignore
 export const stocksDataResolver = resolve({
     created_at: async () => {
         return Date.now()
+    },
+    ordered_quantity: async (value) => {
+        return value ?? 0
+    },
+    shelf_quantity: async (value) => {
+        return value ?? 0
+    },
+    total_quantity: async (value, /** @type stocksSchema */ stock, context) => {
+        const ordered_quantity = stock.ordered_quantity ?? 0
+        const shelf_quantity = stock.shelf_quantity ?? 0
+        return ordered_quantity + shelf_quantity
     }
 })
 
@@ -67,5 +80,6 @@ export const stocksQuerySchema = Type.Intersect(
     ],
     { additionalProperties: false }
 )
+
 export const stocksQueryValidator = getValidator(stocksQuerySchema, queryValidator)
 export const stocksQueryResolver = resolve({})

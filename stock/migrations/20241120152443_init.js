@@ -9,11 +9,17 @@ export const up = async (knex) => {
         table.integer('shop_id').notNullable().references('id').inTable('shops').onDelete('CASCADE')
         table.bigint('created_at').notNullable()
 
-        table.integer('shelf_quantity').notNullable().defaultTo(0)
-        table.integer('ordered_quantity').notNullable().defaultTo(0)
+        table.integer('shelf_quantity').notNullable()
+        table.integer('ordered_quantity').notNullable()
+        table.integer('total_quantity').notNullable()
 
         table.check('shelf_quantity >= 0', undefined, 'check_shelf_quantity_positive')
         table.check('ordered_quantity >= 0', undefined, 'check_ordered_quantity_positive')
+        table.check(
+            'shelf_quantity + ordered_quantity <= total_quantity',
+            undefined,
+            'check_total_quantity_sum'
+        )
     })
 
     await knex.schema.alterTable('products', (table) => {

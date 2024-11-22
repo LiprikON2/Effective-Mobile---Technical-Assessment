@@ -27,6 +27,7 @@ export const stocks = (app) => {
         // You can add additional custom events to be sent to clients here
         events: []
     })
+
     // Initialize hooks
     app.service(stocksPath).hooks({
         around: {
