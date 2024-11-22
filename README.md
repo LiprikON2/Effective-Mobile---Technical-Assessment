@@ -1,7 +1,7 @@
 # Effective Mobile - Technical Assessment
 
 
-## [Postman docs](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?workspaceId=d4697269-b18e-44d0-a0d8-07b2e8e02143)
+## [Postman docs](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment)
 
 
 
