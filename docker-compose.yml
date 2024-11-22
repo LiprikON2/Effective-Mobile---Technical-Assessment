@@ -1,45 +1,6 @@
 name: store
 
 services:
-    # auth:
-    #     profiles: [prod]
-    #     build:
-    #         context: ./auth
-    #         dockerfile: Dockerfile
-    #     ports:
-    #         - '3029:3030' # host:container
-    #     depends_on:
-    #         db:
-    #             condition: service_healthy
-    #     environment:
-    #         NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "auth"}}}'
-    
-
-    # auth-dev:
-    #     profiles: [dev]
-    #     build:
-    #         context: ./auth
-    #         dockerfile: Dockerfile
-    #     command: sh -c "npm run migrate && npm run dev"
-    #     # nodemon fix
-    #     # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
-    #     develop:
-    #         watch:
-    #             - action: sync
-    #               path: ./auth/src
-    #               target: /usr/src/app/src # Based on Dockerfile's WORKDIR
-    #               ignore:
-    #                   - node_modules/
-    #             - action: rebuild
-    #               path: ./auth/package.json
-    #     ports:
-    #         - '3029:3030' # host:container
-    #     depends_on:
-    #         db:
-    #             condition: service_healthy
-    #     environment:
-    #         NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "auth"}}}'
-
 
     stock:
         profiles: [prod]
@@ -133,15 +94,6 @@ services:
                 condition: service_healthy
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
-
-    # stock-history:
-    #   build:
-    #     context: ./stock-history
-    #     dockerfile: Dockerfile
-    #   ports:
-    #     - "3031:3030"  # host:container
-    #   environment:
-    #     DATABASE_URL: postgres://user:password@db:5432/${POSTGRES_DB}
 
 
     db:
