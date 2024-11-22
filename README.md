@@ -163,7 +163,7 @@ Modify `package.json`:
 (cd ./stock && npm run migrate:make -- migration_name)
 ```
 
-2. Manually update `up` and `down` functions ([Example](https://feathersjs.com/guides/basics/schemas#creating-a-migration))
+2. Manually fill up `up` and `down` functions ([Example](https://feathersjs.com/guides/basics/schemas#creating-a-migration))
 
 
 ### Structure

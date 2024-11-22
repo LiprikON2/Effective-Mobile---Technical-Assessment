@@ -4,6 +4,22 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { productsHistoryClient } from './services/products-history/products-history.shared'
+export type {
+    ProductsHistory,
+    ProductsHistoryData,
+    ProductsHistoryQuery,
+    ProductsHistoryPatch
+} from './services/products-history/products-history.shared'
+
+import { stocksHistoryClient } from './services/stocks-history/stocks-history.shared'
+export type {
+    StocksHistory,
+    StocksHistoryData,
+    StocksHistoryQuery,
+    StocksHistoryPatch
+} from './services/stocks-history/stocks-history.shared'
+
 export interface Configuration {
     connection: TransportConnection<ServiceTypes>
 }
@@ -20,7 +36,7 @@ export type ClientApplication = Application<ServiceTypes, Configuration>
  * @see https://dove.feathersjs.com/api/client.html
  * @returns The Feathers client application
  */
-export const createClient = <Configuration = any>(
+export const createClient = <Configuration = any,>(
     connection: TransportConnection<ServiceTypes>,
     authenticationOptions: Partial<AuthenticationClientOptions> = {}
 ) => {
@@ -30,5 +46,7 @@ export const createClient = <Configuration = any>(
     client.configure(authenticationClient(authenticationOptions))
     client.set('connection', connection)
 
+    client.configure(stocksHistoryClient)
+    client.configure(productsHistoryClient)
     return client
 }
