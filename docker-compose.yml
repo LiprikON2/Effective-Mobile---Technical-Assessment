@@ -73,6 +73,7 @@ services:
                       - node_modules/
                 - action: rebuild
                   path: ./stock/package.json
+        hostname: stock
         ports:
             - '3030:3030' # host:container
         # Checks if db ready to accept connections
@@ -81,6 +82,7 @@ services:
                 condition: service_healthy
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
+
 
     stock-history:
         profiles: [prod]
@@ -114,6 +116,7 @@ services:
                       - node_modules/
                 - action: rebuild
                   path: ./stock-history/package.json
+        hostname: stock-history
         ports:
             - '3031:3030' # host:container
         # Checks if db ready to accept connections

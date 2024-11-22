@@ -11,7 +11,10 @@ import type { ProductsHistoryService } from './products-history.class'
 export const productsHistorySchema = Type.Object(
     {
         id: Type.Number(),
-        text: Type.String()
+        action: Type.String(),
+        result_id: Type.Number(),
+        name: Type.String(),
+        plu: Type.String()
     },
     { $id: 'ProductsHistory', additionalProperties: false }
 )
@@ -24,9 +27,13 @@ export const productsHistoryExternalResolver = resolve<ProductsHistory, HookCont
 )
 
 // Schema for creating new entries
-export const productsHistoryDataSchema = Type.Pick(productsHistorySchema, ['text'], {
-    $id: 'ProductsHistoryData'
-})
+export const productsHistoryDataSchema = Type.Pick(
+    productsHistorySchema,
+    ['action', 'result_id', 'name', 'plu'],
+    {
+        $id: 'ProductsHistoryData'
+    }
+)
 export type ProductsHistoryData = Static<typeof productsHistoryDataSchema>
 export const productsHistoryDataValidator = getValidator(productsHistoryDataSchema, dataValidator)
 export const productsHistoryDataResolver = resolve<ProductsHistory, HookContext<ProductsHistoryService>>({})
@@ -40,7 +47,7 @@ export const productsHistoryPatchValidator = getValidator(productsHistoryPatchSc
 export const productsHistoryPatchResolver = resolve<ProductsHistory, HookContext<ProductsHistoryService>>({})
 
 // Schema for allowed query properties
-export const productsHistoryQueryProperties = Type.Pick(productsHistorySchema, ['id', 'text'])
+export const productsHistoryQueryProperties = Type.Pick(productsHistorySchema, ['id', 'plu', 'action'])
 export const productsHistoryQuerySchema = Type.Intersect(
     [
         querySyntax(productsHistoryQueryProperties),
