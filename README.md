@@ -322,3 +322,18 @@ Modify `package.json`:
 2. Manually fill up `up` and `down` functions ([Example](https://feathersjs.com/guides/basics/schemas#creating-a-migration))
 
 
+
+___
+
+
+## Задание 2
+
+### Running
+
+Development (w/ hot reloading)
+```
+(cd user && npm run start:dev -- -b swc)
+```
+
+
+<!-- ### Development -->
