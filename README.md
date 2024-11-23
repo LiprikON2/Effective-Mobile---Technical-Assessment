@@ -331,8 +331,15 @@ ___
 ### Running
 
 Development (w/ hot reloading)
-```
+
+```bash
 (cd user && npm run start:dev -- -b swc)
+```
+
+#### Adding a service (generating CRUD table boilerplate)
+
+```bash
+(cd user && nest g resource service-name)
 ```
 
 
