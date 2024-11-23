@@ -11,10 +11,10 @@
 ### Сервис остатков товаров в магазине
 
 > [!NOTE]
-> `stock`
+> Microservice `stock`
 > - Language: JavaScript
 > - Framework: Feathers.js
-> - HTTP framework: Koa.js
+> - HTTP platform: Koa.js
 > - SQL Query Builder: Knex.js
 > - DBMS: PostgreSQL
 
@@ -97,10 +97,10 @@
 
 
 > [!NOTE]
-> `stock-history`
+> Microservice `stock-history`
 > - Language: TypeScript
 > - Framework: Feathers.js
-> - HTTP framework: Koa.js
+> - HTTP platform: Koa.js
 > - SQL Query Builder: Knex.js
 > - DBMS: PostgreSQL
 
