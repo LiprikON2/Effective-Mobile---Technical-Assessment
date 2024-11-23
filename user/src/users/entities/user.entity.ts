@@ -7,13 +7,12 @@ export class User {
 
     @Column()
     first_name: string
-    @Column()
-    middle_name: string
+
     @Column()
     last_name: string
 
     @Column()
-    has_issue: boolean
+    has_issues: boolean
 
     @Column({
         type: 'enum',
