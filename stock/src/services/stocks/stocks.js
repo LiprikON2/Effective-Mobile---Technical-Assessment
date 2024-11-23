@@ -44,7 +44,25 @@ export const stocks = (app) => {
                 schemaHooks.validateQuery(stocksQueryValidator),
                 schemaHooks.resolveQuery(stocksQueryResolver)
             ],
-            find: [],
+            find: [
+                async (context) => {
+                    const query = context.service.createQuery(context.params)
+
+                    query
+                        .select([
+                            'stocks.id',
+                            'stocks.product_id',
+                            'stocks.shop_id',
+                            'stocks.shelf_quantity',
+                            'stocks.ordered_quantity',
+                            'stocks.total_quantity',
+                            'stocks.created_at'
+                        ])
+                        .leftJoin('products as product', 'stocks.product_id', 'product.id')
+                        .groupBy('stocks.id')
+                    context.params.knex = query
+                }
+            ],
             get: [],
             create: [
                 schemaHooks.validateData(stocksDataValidator),

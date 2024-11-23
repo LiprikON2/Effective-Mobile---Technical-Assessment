@@ -76,7 +76,7 @@
   - [`PATCH localhost:3030/stocks/2`](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?workspaceId=d4697269-b18e-44d0-a0d8-07b2e8e02143&entity=request-dbbaa8ed-74a9-4fac-b847-5ee2acc1dbf7)
 - Получение остатков по фильтрам
     - `plu`
-        - Не сделано
+        - [`GET localhost:3030/stocks?product.plu=1233`](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?entity=request-6b9782b9-d842-4233-953d-883be206372c)
     - `shop_id`
       - [`GET localhost:3030/stocks?shop_id=1`](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment?workspaceId=d4697269-b18e-44d0-a0d8-07b2e8e02143&entity=request-fc7f0734-a44c-4696-a311-3733e8aa3a49)
     - количество остатков на полке (с-по)
