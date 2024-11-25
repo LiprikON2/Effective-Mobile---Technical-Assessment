@@ -99,40 +99,40 @@ services:
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
 
-    # user:
-    #     build:
-    #         context: ./user
-    #         dockerfile: Dockerfile
-    #     command: sh -c "npm run start:dev"
+    user:
+        build:
+            context: ./user
+            dockerfile: Dockerfile
+        command: sh -c "npm run start:dev"
 
-    #     develop:
-    #         watch:
-    #             - action: sync
-    #               path: ./user/src
-    #               target: /usr/src/app/src # Based on Dockerfile's WORKDIR
-    #               ignore:
-    #                   - node_modules/
-    #             - action: rebuild
-    #               path: ./user/package.json
+        develop:
+            watch:
+                - action: sync
+                  path: ./user/src
+                  target: /usr/src/app/src # Based on Dockerfile's WORKDIR
+                  ignore:
+                      - node_modules/
+                - action: rebuild
+                  path: ./user/package.json
 
-    #     environment:
-    #         POSTGRES_HOST: db
-    #         POSTGRES_PORT: 5432
-    #         POSTGRES_DB: user
-    #         POSTGRES_USER: ${POSTGRES_USER}
-    #         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        environment:
+            POSTGRES_HOST: db
+            POSTGRES_PORT: 5432
+            POSTGRES_DB: user
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             
-    #         MODE: DEV
-    #         RUN_MIGRATIONS: true
+            MODE: DEV
+            RUN_MIGRATIONS: true
             
-    #     hostname: user
-    #     ports:
-    #         - '3000:3000'
-    #     depends_on:
-    #         db:
-    #             condition: service_healthy
-    #     volumes:
-    #         - ./src:/app/src
+        hostname: user
+        ports:
+            - '3000:3000'
+        depends_on:
+            db:
+                condition: service_healthy
+        volumes:
+            - ./src:/app/src
 
 
     db:

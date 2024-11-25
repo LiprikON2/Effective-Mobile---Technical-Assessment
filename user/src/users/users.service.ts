@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DataSource, Repository } from 'typeorm'
 
+import { PageDto, PageMetaDto, PageOptionsDto } from '../common/dtos'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
@@ -22,8 +23,20 @@ export class UsersService {
         return await this.usersRepository.save(user)
     }
 
-    findAll(): Promise<User[]> {
-        return this.usersRepository.find()
+    async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<User>> {
+        const queryBuilder = this.usersRepository.createQueryBuilder('users')
+
+        queryBuilder
+            .orderBy('users.id', pageOptionsDto.order)
+            .skip(pageOptionsDto.skip)
+            .take(pageOptionsDto.take)
+
+        const itemCount = await queryBuilder.getCount()
+        const { entities } = await queryBuilder.getRawAndEntities()
+
+        const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto })
+
+        return new PageDto(entities, pageMetaDto)
     }
 
     findOne(id: number): Promise<User | null> {

@@ -1,7 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
-import { UsersService } from './users.service'
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    HttpCode,
+    HttpStatus,
+    Query
+} from '@nestjs/common'
+
+import { ApiPaginatedResponse } from '../common/decorators'
+import { PageDto, PageOptionsDto } from '../common/dtos'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { User } from './entities/user.entity'
+import { UsersService } from './users.service'
 
 @Controller('users')
 export class UsersController {
@@ -13,8 +28,10 @@ export class UsersController {
     }
 
     @Get()
-    findAll() {
-        return this.usersService.findAll()
+    @HttpCode(HttpStatus.OK)
+    @ApiPaginatedResponse(User)
+    async findAll(@Query() pageOptionsDto: PageOptionsDto): Promise<PageDto<User>> {
+        return this.usersService.findAll(pageOptionsDto)
     }
 
     @Get(':id')
