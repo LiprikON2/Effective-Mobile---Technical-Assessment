@@ -2,137 +2,137 @@ name: store
 
 services:
 
-    # stock:
-    #     profiles: [prod]
-    #     build:
-    #         context: ./stock
-    #         dockerfile: Dockerfile
-    #     command: sh -c "npm run migrate && npm run start"
-    #     hostname: stock
-    #     ports:
-    #         - '3030:3030' # host:container
-    #     # Checks if db and rabbit are ready to accept connections
-    #     depends_on:
-    #         db:
-    #             condition: service_healthy
-    #         rabbitmq:
-    #             condition: service_healthy
-    #     environment:
-    #         NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
-
-
-    # stock-dev:
-    #     profiles: [dev]
-    #     build:
-    #         context: ./stock
-    #         dockerfile: Dockerfile
-    #     command: sh -c "npm run migrate && npm run dev"
-    #     # nodemon fix
-    #     # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
-    #     develop:
-    #         watch:
-    #             - action: sync
-    #               path: ./stock/src
-    #               target: /usr/src/app/src # Based on Dockerfile's WORKDIR
-    #               ignore:
-    #                   - node_modules/
-    #             - action: rebuild
-    #               path: ./stock/package.json
-    #     hostname: stock
-    #     ports:
-    #         - '3030:3030' # host:container
-    #     # Checks if db and rabbit are ready to accept connections
-    #     depends_on:
-    #         db:
-    #             condition: service_healthy
-    #         rabbitmq:
-    #             condition: service_healthy
-    #     environment:
-    #         NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
-
-
-    # stock-history:
-    #     profiles: [prod]
-    #     build:
-    #         context: ./stock-history
-    #         dockerfile: Dockerfile
-    #     command: sh -c "npm run migrate && npm run compile && npm start"
-    #     hostname: stock-history
-    #     ports:
-    #         - '3031:3030' # host:container
-    #     # Checks if db and rabbit are ready to accept connections
-    #     depends_on:
-    #         db:
-    #             condition: service_healthy
-    #         rabbitmq:
-    #             condition: service_healthy
-    #     environment:
-    #         NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
-
-
-    # stock-history-dev:
-    #     profiles: [dev]
-    #     build:
-    #         context: ./stock-history
-    #         dockerfile: Dockerfile
-    #     command: sh -c "npm run migrate && npm run dev"
-    #     # nodemon fix
-    #     # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
-    #     develop:
-    #         watch:
-    #             - action: sync
-    #               path: ./stock-history/src
-    #               target: /usr/src/app/src # Based on Dockerfile's WORKDIR
-    #               ignore:
-    #                   - node_modules/
-    #             - action: rebuild
-    #               path: ./stock-history/package.json
-    #     hostname: stock-history
-    #     ports:
-    #         - '3031:3030' # host:container
-    #     # Checks if db and rabbit are ready to accept connections
-    #     depends_on:
-    #         db:
-    #             condition: service_healthy
-    #         rabbitmq:
-    #             condition: service_healthy
-    #     environment:
-    #         NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
-
-    user:
+    stock:
+        profiles: [prod]
         build:
-            context: ./user
+            context: ./stock
             dockerfile: Dockerfile
-        command: sh -c "npm run start:dev"
+        command: sh -c "npm run migrate && npm run start"
+        hostname: stock
+        ports:
+            - '3030:3030' # host:container
+        # Checks if db and rabbit are ready to accept connections
+        depends_on:
+            db:
+                condition: service_healthy
+            rabbitmq:
+                condition: service_healthy
+        environment:
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
 
+
+    stock-dev:
+        profiles: [dev]
+        build:
+            context: ./stock
+            dockerfile: Dockerfile
+        command: sh -c "npm run migrate && npm run dev"
+        # nodemon fix
+        # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
         develop:
             watch:
                 - action: sync
-                  path: ./user/src
+                  path: ./stock/src
                   target: /usr/src/app/src # Based on Dockerfile's WORKDIR
                   ignore:
                       - node_modules/
                 - action: rebuild
-                  path: ./user/package.json
-
-        environment:
-            POSTGRES_HOST: db
-            POSTGRES_PORT: 5432
-            POSTGRES_DB: user
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            
-            MODE: DEV
-            RUN_MIGRATIONS: true
-            
-        hostname: user
+                  path: ./stock/package.json
+        hostname: stock
         ports:
-            - '3000:3000'
+            - '3030:3030' # host:container
+        # Checks if db and rabbit are ready to accept connections
         depends_on:
             db:
                 condition: service_healthy
-        volumes:
-            - ./src:/app/src
+            rabbitmq:
+                condition: service_healthy
+        environment:
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock"}}}'
+
+
+    stock-history:
+        profiles: [prod]
+        build:
+            context: ./stock-history
+            dockerfile: Dockerfile
+        command: sh -c "npm run migrate && npm run compile && npm start"
+        hostname: stock-history
+        ports:
+            - '3031:3030' # host:container
+        # Checks if db and rabbit are ready to accept connections
+        depends_on:
+            db:
+                condition: service_healthy
+            rabbitmq:
+                condition: service_healthy
+        environment:
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
+
+
+    stock-history-dev:
+        profiles: [dev]
+        build:
+            context: ./stock-history
+            dockerfile: Dockerfile
+        command: sh -c "npm run migrate && npm run dev"
+        # nodemon fix
+        # ref: https://docs.docker.com/compose/how-tos/file-watch/#example-1
+        develop:
+            watch:
+                - action: sync
+                  path: ./stock-history/src
+                  target: /usr/src/app/src # Based on Dockerfile's WORKDIR
+                  ignore:
+                      - node_modules/
+                - action: rebuild
+                  path: ./stock-history/package.json
+        hostname: stock-history
+        ports:
+            - '3031:3030' # host:container
+        # Checks if db and rabbit are ready to accept connections
+        depends_on:
+            db:
+                condition: service_healthy
+            rabbitmq:
+                condition: service_healthy
+        environment:
+            NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
+
+    # user:
+    #     build:
+    #         context: ./user
+    #         dockerfile: Dockerfile
+    #     command: sh -c "npm run start:dev"
+
+    #     develop:
+    #         watch:
+    #             - action: sync
+    #               path: ./user/src
+    #               target: /usr/src/app/src # Based on Dockerfile's WORKDIR
+    #               ignore:
+    #                   - node_modules/
+    #             - action: rebuild
+    #               path: ./user/package.json
+
+    #     environment:
+    #         POSTGRES_HOST: db
+    #         POSTGRES_PORT: 5432
+    #         POSTGRES_DB: user
+    #         POSTGRES_USER: ${POSTGRES_USER}
+    #         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            
+    #         MODE: DEV
+    #         RUN_MIGRATIONS: true
+            
+    #     hostname: user
+    #     ports:
+    #         - '3000:3000'
+    #     depends_on:
+    #         db:
+    #             condition: service_healthy
+    #     volumes:
+    #         - ./src:/app/src
 
 
     db:
@@ -155,19 +155,19 @@ services:
             - '15432:5432' # host:container
 
 
-    # rabbitmq:
-    #     image: rabbitmq:3-management
-    #     container_name: rabbitmq
-    #     healthcheck:
-    #         test: rabbitmq-diagnostics check_port_connectivity
-    #         interval: 30s
-    #         timeout: 30s
-    #         retries: 10
-    #     ports:
-    #         - 5672:5672
-    #         - 15672:15672
-    #     volumes:
-    #         - rabbitmq_data:/var/lib/rabbitmq
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        healthcheck:
+            test: rabbitmq-diagnostics check_port_connectivity
+            interval: 30s
+            timeout: 30s
+            retries: 10
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
 
 
 volumes:
