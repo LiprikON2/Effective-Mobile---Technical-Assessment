@@ -184,14 +184,20 @@ docker-compose --profile prod up --build
 
 #### 3. Interact with containers
 
-- Auth service swagger docs
-    - http://localhost:3029/docs
-- Stock service swagger docs
+- Stock microservice swagger docs
     - http://localhost:3030/docs
-- Stock history service swagger docs
+- Stock history microservice swagger docs
     - http://localhost:3031/docs
-- Shared PostgreSQL `store` database
-    - `psql postgres://user:password@localhost:15432/store`
+- User microservice
+    - http://localhost:3029/docs
+- PostgreSQL database
+    - `psql postgres://user:password@localhost:15432/postgres`
+    - Database `stock`
+        - Table `stocks`
+    - Database `stock-history`
+        - Table `stocks-history`
+    - Database `user`
+        - Table `users`
 
 
 
@@ -328,12 +334,106 @@ ___
 
 ## Задание 2
 
+### Сервис пользователей
+
+> [!NOTE]
+> Microservice `user`
+> - Language: TypeScript
+> - Framework: Nest.js
+> - HTTP platform: Express.js
+> - ORM: TypeORM
+> - DBMS: PostgreSQL
+
+
+![](https://i.imgur.com/HGjiMB7.png)
+
+Нужно написать сервис, который работает с пользователями.
+
+В бд может быть более 1 миллиона пользователей (набить данными бд нужно самостоятельно. Например, написать миграцию, которая это сделает). Каждый пользователь имеет поля:
+
+- Имя
+- Фамилия
+- Возраст
+- Пол
+- проблемы: boolean // есть ли проблемы у пользователя
+
+
+
+`user.factory.ts`
+```ts
+export default setSeederFactory(User, (faker) => {
+    const user: Partial<User> = {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        has_issues: faker.datatype.boolean({ probability: 0.3 }),
+        gender: faker.helpers.arrayElement(['male', 'female']),
+        birth_date: faker.date.between({ from: '1950-01-01', to: '2005-12-31' })
+    }
+
+    return user
+})
+```
+
+`user.seeder.ts`
+```ts
+export default class UserSeeder implements Seeder {
+    public async run(dataSource: DataSource, factoryManager: SeederFactoryManager): Promise<void> {
+        const userFactory = factoryManager.get(User)
+
+        faker.seed(42)
+
+        const iterations = 10000
+        const batchSize = 100
+        const progressBar = new ProgressBar(iterations)
+        console.log(`Generating ${iterations * batchSize} user entries...`)
+
+        for (let i = 0; i < iterations; i++) {
+            await progressBar.update(i)
+            await userFactory.saveMany(batchSize)
+        }
+        progressBar.finish()
+        console.log(`Finished seeding ${iterations * batchSize} users`)
+    }
+}
+```
+
+![](https://i.imgur.com/ygydYGr.png)
+
+
+Нужно сделать endpoint, который проставить флаг проблемы у пользователей в false и посчитает, сколько пользователей имело true в этом флаге. Этот сервис нужно реализовать на nestjs
+
+[`users.service.ts`](./user/src/users/users.service.ts)
+```ts
+async resetAndCountIssues() {
+    const startTime = performance.now()
+
+    const queryBuilder = this.usersRepository.createQueryBuilder('users')
+    const result = await queryBuilder
+        .update(User)
+        .set({ has_issues: false })
+        .where('has_issues = :value', { value: true })
+        .execute()
+
+    const executionTime = performance.now() - startTime
+
+    return {
+        updatedCount: result.affected,
+        executionTimeMs: Math.round(executionTime * 100) / 100,
+        message: `Successfully reset ${result.affected} users`
+    }
+}
+```
+
+[`PUT localhost:3000/users/reset-issues`]()
+- ![](https://i.imgur.com/kcEiKGT.png)
+
+
 ### Running
 
 Development (w/ hot reloading)
 
 ```bash
-(cd user && npm run start:dev -- -b swc)
+docker-compose up user --build --watch
 ```
 
 #### Adding a service (generating CRUD table boilerplate)
@@ -343,10 +443,25 @@ Development (w/ hot reloading)
 ```
 
 
-<!-- ### Development -->
+### Development
 
 #### Seeding database
 
+
+Generating and seeding (slow)
 ```bash
 docker-compose build user && docker compose run --rm user npm run seed
+```
+
+
+or
+
+Creating data dump of user.users table
+```bash
+docker exec -i store-db-1 bash -c "PGPASSWORD=password pg_dump -U user -n public -a -t users user" > ./user/src/database/dumps/user_users_dump.sql
+```
+
+Seeding from data dump (fast)
+```bash
+cat ./user/src/database/dumps/user_users_dump.sql | docker exec -i store-db-1 bash -c "PGPASSWORD=password psql -U user -d user"
 ```

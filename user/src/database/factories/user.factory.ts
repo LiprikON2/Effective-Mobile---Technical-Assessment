@@ -5,7 +5,7 @@ export default setSeederFactory(User, (faker) => {
     const user: Partial<User> = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
-        has_issues: false,
+        has_issues: faker.datatype.boolean({ probability: 0.3 }),
         gender: faker.helpers.arrayElement(['male', 'female']),
         birth_date: faker.date.between({ from: '1950-01-01', to: '2005-12-31' })
     }

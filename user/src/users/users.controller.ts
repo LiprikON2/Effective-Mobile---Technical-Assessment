@@ -8,7 +8,8 @@ import {
     Delete,
     HttpCode,
     HttpStatus,
-    Query
+    Query,
+    Put
 } from '@nestjs/common'
 
 import { ApiPaginatedResponse } from '../common/decorators'
@@ -47,5 +48,10 @@ export class UsersController {
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.usersService.remove(+id)
+    }
+
+    @Put('reset-issues')
+    async resetIssues() {
+        return this.usersService.resetAndCountIssues()
     }
 }

@@ -9,17 +9,18 @@ export default class UserSeeder implements Seeder {
     public async run(dataSource: DataSource, factoryManager: SeederFactoryManager): Promise<void> {
         const userFactory = factoryManager.get(User)
 
-        console.log('Generating 1 million user entries...')
         faker.seed(42)
 
         const iterations = 10000
+        const batchSize = 100
         const progressBar = new ProgressBar(iterations)
+        console.log(`Generating ${iterations * batchSize} user entries...`)
 
         for (let i = 0; i < iterations; i++) {
             await progressBar.update(i)
-            await userFactory.saveMany(100)
+            await userFactory.saveMany(batchSize)
         }
         progressBar.finish()
-        console.log('Finished seeding 1 million users')
+        console.log(`Finished seeding ${iterations * batchSize} users`)
     }
 }

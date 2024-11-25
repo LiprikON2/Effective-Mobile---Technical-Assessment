@@ -61,4 +61,38 @@ export class UsersService {
 
         return await this.usersRepository.save(updatedUser)
     }
+
+    async resetAndCountIssues() {
+        const startTime = performance.now()
+
+        //*
+        // Executes in ~7500 ms for 300 000 updates of 1 000 000 users
+        const queryBuilder = this.usersRepository.createQueryBuilder('users')
+        const result = await queryBuilder
+            .update(User)
+            .set({ has_issues: false })
+            .where('has_issues = :value', { value: true })
+            .execute()
+        /*/
+        // Executes in ~13250 ms for 300 000 has_issues of 100000 users
+        const [result] = await this.usersRepository.query(`
+            WITH updated AS (
+                UPDATE "users"
+                SET has_issues = false
+                WHERE has_issues = true
+                RETURNING 1
+            )
+            SELECT COUNT(*) as affected FROM updated
+        `)
+        result.affected = parseInt(result.affected)
+        //*/
+
+        const executionTime = performance.now() - startTime
+
+        return {
+            updatedCount: result.affected,
+            executionTimeMs: Math.round(executionTime * 100) / 100,
+            message: `Successfully reset ${result.affected} users`
+        }
+    }
 }
