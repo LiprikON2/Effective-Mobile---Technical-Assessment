@@ -1,7 +1,77 @@
 # Effective Mobile - Technical Assessment
 
 
+- [Effective Mobile - Technical Assessment](#effective-mobile---technical-assessment)
+  - [Postman docs](#postman-docs)
+  - [Running](#running)
+    - [1. Set up environment variables](#1-set-up-environment-variables)
+    - [2. Run `docker-compose`](#2-run-docker-compose)
+    - [3. Interact with containers](#3-interact-with-containers)
+  - [Задание 1](#задание-1)
+    - [Сервис остатков товаров в магазине](#сервис-остатков-товаров-в-магазине)
+      - [Таблицы после нормализации](#таблицы-после-нормализации)
+        - [Таблица остатков](#таблица-остатков)
+        - [Таблица товаров](#таблица-товаров)
+        - [Таблица магазинов](#таблица-магазинов)
+    - [Cервис истории действий с товарами](#cервис-истории-действий-с-товарами)
+      - [Tаблицы](#tаблицы)
+        - [Таблица истории действий с товарами](#таблица-истории-действий-с-товарами)
+        - [Таблица истории действий с остатками](#таблица-истории-действий-с-остатками)
+    - [Structure](#structure)
+      - [Database-per-Service vs Shared Instance](#database-per-service-vs-shared-instance)
+    - [Development](#development)
+      - [Adding a microservice](#adding-a-microservice)
+      - [Adding a service (generating CRUD table boilerplate)](#adding-a-service-generating-crud-table-boilerplate)
+      - [Making migrations](#making-migrations)
+  - [Задание 2](#задание-2)
+    - [Сервис пользователей](#сервис-пользователей)
+    - [Running](#running-1)
+    - [Development](#development-1)
+      - [Adding a service (generating CRUD table boilerplate)](#adding-a-service-generating-crud-table-boilerplate-1)
+      - [Seeding database](#seeding-database)
+
+
 ## [Postman docs](https://www.postman.com/liprikon/effective-mobile-technical-assessment/documentation/xy0gcbl/effective-mobile-technical-assessment)
+
+
+## Running
+
+### 1. Set up environment variables
+
+```bash
+cp .env.example .env
+```
+
+### 2. Run `docker-compose`
+
+
+Development (w/ hot reloading)
+```bash
+docker-compose --profile dev up --build --watch
+```
+
+Production
+```bash
+docker-compose --profile prod up --build
+```
+
+### 3. Interact with containers
+
+- Stock microservice swagger docs
+    - http://localhost:3030/docs
+- Stock history microservice swagger docs
+    - http://localhost:3031/docs
+- User microservice
+    - http://localhost:3029/docs
+- PostgreSQL database
+    - `psql postgres://user:password@localhost:15432/postgres`
+    - Database `stock`
+        - Table `stocks`
+    - Database `stock-history`
+        - Table `stocks-history`
+    - Database `user`
+        - Table `users`
+
 
 
 ## Задание 1
@@ -158,47 +228,6 @@
 
 - [Knex and multiple databases](https://stackoverflow.com/a/57196477)
 
-___
-
-
-### Running
-
-#### 1. Set up environment variables
-
-```bash
-cp .env.example .env
-```
-
-#### 2. Run `docker-compose`
-
-
-Development (w/ hot reloading)
-```bash
-docker-compose --profile dev up --build --watch
-```
-
-Production
-```bash
-docker-compose --profile prod up --build
-```
-
-#### 3. Interact with containers
-
-- Stock microservice swagger docs
-    - http://localhost:3030/docs
-- Stock history microservice swagger docs
-    - http://localhost:3031/docs
-- User microservice
-    - http://localhost:3029/docs
-- PostgreSQL database
-    - `psql postgres://user:password@localhost:15432/postgres`
-    - Database `stock`
-        - Table `stocks`
-    - Database `stock-history`
-        - Table `stocks-history`
-    - Database `user`
-        - Table `users`
-
 
 
 ### Development
@@ -329,7 +358,7 @@ Modify `package.json`:
 
 
 
-___
+
 
 
 ## Задание 2
@@ -357,7 +386,42 @@ ___
 - Пол
 - проблемы: boolean // есть ли проблемы у пользователя
 
+`user.entity.ts`
+```ts
+@Entity('users')
+export class User {
+    @PrimaryGeneratedColumn()
+    id: number
 
+    @Column()
+    first_name: string
+
+    @Column()
+    last_name: string
+
+    @Column()
+    has_issues: boolean
+
+    @Column({
+        type: 'enum',
+        enum: ['male', 'female']
+    })
+    gender: string
+
+    @Column({ type: 'date' })
+    birth_date: Date
+
+    @Expose() // Makes the virtual property visible in responses
+    @Transform(({ obj }) => obj.getAge())
+    age: number
+
+    getAge(): number {
+        return Math.floor(
+            (new Date().getTime() - new Date(this.birth_date).getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+        )
+    }
+}
+```
 
 `user.factory.ts`
 ```ts
@@ -396,6 +460,8 @@ export default class UserSeeder implements Seeder {
     }
 }
 ```
+
+Генерация 1 000 000 пользователей, у 30% из которых стоит флаг имения проблемы
 
 ![](https://i.imgur.com/ygydYGr.png)
 
@@ -436,14 +502,15 @@ Development (w/ hot reloading)
 docker-compose up user --build --watch
 ```
 
+
+
+### Development
+
 #### Adding a service (generating CRUD table boilerplate)
 
 ```bash
 (cd user && nest g resource service-name)
 ```
-
-
-### Development
 
 #### Seeding database
 
@@ -453,10 +520,9 @@ Generating and seeding (slow)
 docker-compose build user && docker compose run --rm user npm run seed
 ```
 
-
 or
 
-Creating data dump of user.users table
+Creating data dump of user.users table (fast)
 ```bash
 docker exec -i store-db-1 bash -c "PGPASSWORD=password pg_dump -U user -n public -a -t users user" > ./user/src/database/dumps/user_users_dump.sql
 ```
