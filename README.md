@@ -13,6 +13,7 @@
         - [Таблица остатков](#таблица-остатков)
         - [Таблица товаров](#таблица-товаров)
         - [Таблица магазинов](#таблица-магазинов)
+      - [Endpoints](#endpoints)
     - [Cервис истории действий с товарами](#cервис-истории-действий-с-товарами)
       - [Tаблицы](#tаблицы)
         - [Таблица истории действий с товарами](#таблица-истории-действий-с-товарами)
@@ -25,6 +26,7 @@
       - [Making migrations](#making-migrations)
   - [Задание 2](#задание-2)
     - [Сервис пользователей](#сервис-пользователей)
+      - [Endpoints](#endpoints-1)
     - [Running](#running-1)
     - [Development](#development-1)
       - [Adding a service (generating CRUD table boilerplate)](#adding-a-service-generating-crud-table-boilerplate-1)
@@ -45,12 +47,12 @@ cp .env.example .env
 ### 2. Run `docker-compose`
 
 
-Development (w/ hot reloading)
+Development mode (w/ hot reloading)
 ```bash
 docker-compose --profile dev up --build --watch
 ```
 
-Production
+Production mode
 ```bash
 docker-compose --profile prod up --build
 ```
@@ -62,7 +64,7 @@ docker-compose --profile prod up --build
 - Stock history microservice swagger docs
     - http://localhost:3031/docs
 - User microservice
-    - http://localhost:3029/docs
+    - http://localhost:3000/docs
 - PostgreSQL database
     - `psql postgres://user:password@localhost:15432/postgres`
     - Database `stock`
@@ -133,6 +135,8 @@ docker-compose --profile prod up --build
 - `id` - первичный ключ
 - `name` - название магазина
 
+
+#### Endpoints
 
 Должны быть следующие endpoint'ы:
 
@@ -411,7 +415,7 @@ export class User {
     @Column({ type: 'date' })
     birth_date: Date
 
-    @Expose() // Makes the virtual property visible in responses
+    @Expose() // Makes the virtual properties visible in responses
     @Transform(({ obj }) => obj.getAge())
     age: number
 
@@ -465,6 +469,8 @@ export default class UserSeeder implements Seeder {
 
 ![](https://i.imgur.com/ygydYGr.png)
 
+
+#### Endpoints
 
 Нужно сделать endpoint, который проставить флаг проблемы у пользователей в false и посчитает, сколько пользователей имело true в этом флаге. Этот сервис нужно реализовать на nestjs
 

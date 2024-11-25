@@ -99,7 +99,32 @@ services:
         environment:
             NODE_CONFIG: '{"postgresql": {"connection": {"host": "db", "port": 5432, "user": "$POSTGRES_USER", "password": "$POSTGRES_PASSWORD", "database": "stock_history"}}}'
 
+
     user:
+        profiles: [prod]
+        build:
+            context: ./user
+            dockerfile: Dockerfile
+        command: sh -c "npm run start"
+        environment:
+            POSTGRES_HOST: db
+            POSTGRES_PORT: 5432
+            POSTGRES_DB: user
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            MODE: PROD
+        hostname: user
+        ports:
+            - '3000:3000'
+        depends_on:
+            db:
+                condition: service_healthy
+        volumes:
+            - ./src:/app/src
+
+
+    user-dev:
+        profiles: [dev]
         build:
             context: ./user
             dockerfile: Dockerfile
@@ -114,17 +139,13 @@ services:
                       - node_modules/
                 - action: rebuild
                   path: ./user/package.json
-
         environment:
             POSTGRES_HOST: db
             POSTGRES_PORT: 5432
             POSTGRES_DB: user
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            
             MODE: DEV
-            RUN_MIGRATIONS: true
-            
         hostname: user
         ports:
             - '3000:3000'
@@ -134,7 +155,7 @@ services:
         volumes:
             - ./src:/app/src
 
-
+    
     db:
         image: postgres:latest
         volumes:

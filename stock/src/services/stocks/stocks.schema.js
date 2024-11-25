@@ -89,7 +89,6 @@ export const stocksQuerySchema = Type.Intersect(
         // Add additional query properties here
         Type.Object(
             {
-                // Add product relation queries
                 'product.plu': Type.Optional(productQueryProperties.properties.plu)
             },
             { additionalProperties: false }
@@ -100,28 +99,26 @@ export const stocksQuerySchema = Type.Intersect(
 
 export const stocksQueryValidator = getValidator(stocksQuerySchema, queryValidator)
 export const stocksQueryResolver = resolve({
-    // Add resolver for product.plu query
     'product.plu': async (value, query, context) => {
         if (value !== undefined) {
             console.log('value', value)
-            // First find the product(s) with matching PLU
+            // Finds the product(s) with matching PLU
             const products = await context.app.service('products').find({
                 query: { plu: value }
             })
             console.log('products', products.length, products)
 
-            // Get the product IDs
+            // Gets the product IDs
             const productIds = products.data.map((product) => product.id)
 
             console.log('productIds', productIds.length, productIds)
-            // Add product_id to the query
+            // Adds product_id to the query
             query.product_id = { $in: productIds }
 
-            // Remove the product.plu from the query as it's been processed
+            // Removes the product.plu from the query as it's been processed
             delete query['product.plu']
         }
 
-        console.log('query', query)
         return value
     }
 })
