@@ -27,7 +27,6 @@
   - [Задание 2](#задание-2)
     - [Сервис пользователей](#сервис-пользователей)
       - [Endpoints](#endpoints-1)
-    - [Running](#running-1)
     - [Development](#development-1)
       - [Adding a service (generating CRUD table boilerplate)](#adding-a-service-generating-crud-table-boilerplate-1)
       - [Seeding database](#seeding-database)
@@ -51,6 +50,21 @@ Development mode (w/ hot reloading)
 ```bash
 docker-compose --profile dev up --build --watch
 ```
+
+Single microservice in development mode (w/ hot reloading)
+
+```bash
+docker-compose up stock-dev --build --watch
+```
+
+```bash
+docker-compose up stock-history-dev --build --watch
+```
+
+```bash
+docker-compose up user-dev --build --watch
+```
+
 
 Production mode
 ```bash
@@ -498,15 +512,6 @@ async resetAndCountIssues() {
 
 [`PUT localhost:3000/users/reset-issues`]()
 - ![](https://i.imgur.com/kcEiKGT.png)
-
-
-### Running
-
-Development (w/ hot reloading)
-
-```bash
-docker-compose up user --build --watch
-```
 
 
 
