@@ -344,3 +344,9 @@ Development (w/ hot reloading)
 
 
 <!-- ### Development -->
+
+#### Seeding database
+
+```bash
+docker-compose build user && docker compose run --rm user npm run seed
+```
