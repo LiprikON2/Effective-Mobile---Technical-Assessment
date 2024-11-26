@@ -31,11 +31,7 @@ const isDev = process.env.MODE === 'DEV'
 
                 return {
                     ...options,
-                    synchronize: isDev, // createDatabase overwrites original synchronize value
-                    migrations: ['./src/migrations/**/*{.js,.ts}'],
-                    autoLoadEntities: true,
-                    logging: false,
-                    logger: 'advanced-console'
+                    synchronize: isDev // createDatabase overwrites original synchronize value
                 }
             },
             inject: [ConfigService]

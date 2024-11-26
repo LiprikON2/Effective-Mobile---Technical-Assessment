@@ -120,7 +120,7 @@ services:
             db:
                 condition: service_healthy
         volumes:
-            - ./user/src:/app/src
+            # - ./src:/app/src
             - ./user/src/migrations:/usr/src/app/src/migrations
 
     user-dev:
@@ -153,7 +153,7 @@ services:
             db:
                 condition: service_healthy
         volumes:
-            - ./user/src:/app/src
+            # - ./src:/app/src
             - ./user/src/migrations:/usr/src/app/src/migrations
 
     

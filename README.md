@@ -20,6 +20,7 @@
       - [Tаблицы](#tаблицы)
         - [Таблица истории действий с товарами](#таблица-истории-действий-с-товарами)
         - [Таблица истории действий с остатками](#таблица-истории-действий-с-остатками)
+      - [Endpoints](#endpoints-1)
     - [Structure](#structure)
       - [Database-per-Service vs Shared Instance](#database-per-service-vs-shared-instance)
     - [Development](#development)
@@ -28,7 +29,7 @@
       - [Adding a microservice](#adding-a-microservice)
   - [Задание 2](#задание-2)
     - [Сервис пользователей](#сервис-пользователей)
-      - [Endpoints](#endpoints-1)
+      - [Endpoints](#endpoints-2)
     - [Development](#development-1)
       - [Adding a service (generating CRUD table boilerplate)](#adding-a-service-generating-crud-table-boilerplate-1)
       - [Making migrations](#making-migrations-1)
@@ -244,6 +245,9 @@ docker compose run --rm user npm run migrate
 - `total_quantity` - общее количество товара
 
 
+
+
+#### Endpoints
 Сервис "истории действий с товарами или остатками" должен иметь endpoint, который отдаст историю действий с фильтрами по:
 
 - `shop_id`
@@ -550,11 +554,15 @@ Install dependencies locally (for IntelliSense)
 
 #### Making migrations
 
+1. Run `user` container in prod mode
+```bash
+docker-compose up user --build
+```
+
+2. Generate migrations against db container
 ```bash
 docker-compose build user && docker compose run --rm user npm run migrate:generate --name=migration_name
 ```
-
-- [migration:generate: No changes in database schema were found](https://github.com/typeorm/typeorm/issues/5965)
 
 #### Seeding database
 
