@@ -6,6 +6,8 @@
   - [Running](#running)
     - [1. Set up environment variables](#1-set-up-environment-variables)
     - [2. Run `docker-compose`](#2-run-docker-compose)
+      - [Development mode (w/ hot reloading)](#development-mode-w-hot-reloading)
+      - [Production mode](#production-mode)
     - [3. Interact with containers](#3-interact-with-containers)
   - [Задание 1](#задание-1)
     - [Сервис остатков товаров в магазине](#сервис-остатков-товаров-в-магазине)
@@ -21,14 +23,15 @@
     - [Structure](#structure)
       - [Database-per-Service vs Shared Instance](#database-per-service-vs-shared-instance)
     - [Development](#development)
-      - [Adding a microservice](#adding-a-microservice)
       - [Adding a service (generating CRUD table boilerplate)](#adding-a-service-generating-crud-table-boilerplate)
       - [Making migrations](#making-migrations)
+      - [Adding a microservice](#adding-a-microservice)
   - [Задание 2](#задание-2)
     - [Сервис пользователей](#сервис-пользователей)
       - [Endpoints](#endpoints-1)
     - [Development](#development-1)
       - [Adding a service (generating CRUD table boilerplate)](#adding-a-service-generating-crud-table-boilerplate-1)
+      - [Making migrations](#making-migrations-1)
       - [Seeding database](#seeding-database)
 
 
@@ -46,19 +49,18 @@ cp .env.example .env
 ### 2. Run `docker-compose`
 
 
-Development mode (w/ hot reloading)
+#### Development mode (w/ hot reloading)
+
+All microservices
+
 ```bash
 docker-compose --profile dev up --build --watch
 ```
 
-Single microservice in development mode (w/ hot reloading)
+Single microservice in development mode
 
 ```bash
 docker-compose up stock-dev --build --watch
-```
-
-```bash
-docker-compose up stock-history-dev --build --watch
 ```
 
 ```bash
@@ -66,10 +68,26 @@ docker-compose up user-dev --build --watch
 ```
 
 
-Production mode
+#### Production mode
+
 ```bash
 docker-compose --profile prod up --build
 ```
+
+Running migrations (must be run at least once for production)
+
+```bash
+docker compose run --rm stock npm run migrate
+```
+
+```bash
+docker compose run --rm stock-history npm run migrate
+```
+
+```bash
+docker compose run --rm user npm run migrate
+```
+
 
 ### 3. Interact with containers
 
@@ -87,6 +105,7 @@ docker-compose --profile prod up --build
         - Table `stocks-history`
     - Database `user`
         - Table `users`
+- RabbitMQ
 
 
 
@@ -253,8 +272,26 @@ docker-compose --profile prod up --build
 Install dependencies locally (for IntelliSense)
 
 ```bash
-(cd stock && npm i) & (cd auth && npm i)
+(cd stock && npm i) & (cd stock-history && npm i)
 ```
+
+#### Adding a service (generating CRUD table boilerplate)
+
+```bash
+(cd ./stock && npx feathers generate service)
+```
+
+#### Making migrations
+
+1. Generate empty migration
+```bash
+(cd ./stock && npm run migrate:make -- migration_name)
+```
+
+2. Manually fill up `up` and `down` functions ([Example](https://feathersjs.com/guides/basics/schemas#creating-a-migration))
+
+
+
 
 #### Adding a microservice
 
@@ -356,24 +393,6 @@ Modify `package.json`:
 ```js
 "migrate": "ts-node init-database && knex migrate:latest"
 ```
-
-
-
-#### Adding a service (generating CRUD table boilerplate)
-
-```bash
-(cd ./stock && npx feathers generate service)
-```
-
-#### Making migrations
-
-1. Generate empty migration
-```bash
-(cd ./stock && npm run migrate:make -- migration_name)
-```
-
-2. Manually fill up `up` and `down` functions ([Example](https://feathersjs.com/guides/basics/schemas#creating-a-migration))
-
 
 
 
@@ -517,18 +536,32 @@ async resetAndCountIssues() {
 
 ### Development
 
+Install dependencies locally (for IntelliSense)
+
+```bash
+(cd user && npm i)
+```
+
 #### Adding a service (generating CRUD table boilerplate)
 
 ```bash
-(cd user && nest g resource service-name)
+(cd user && nest g resource my-service-name)
 ```
+
+#### Making migrations
+
+```bash
+docker-compose build user && docker compose run --rm user npm run migrate:generate --name=migration_name
+```
+
+- [migration:generate: No changes in database schema were found](https://github.com/typeorm/typeorm/issues/5965)
 
 #### Seeding database
 
 
 Generating and seeding (slow)
 ```bash
-docker-compose build user && docker compose run --rm user npm run seed
+docker-compose build user-dev && docker compose run --rm user-dev npm run seed
 ```
 
 or

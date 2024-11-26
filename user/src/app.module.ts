@@ -1,31 +1,27 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
-import { UsersModule } from './users/users.module'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { createDatabase } from 'typeorm-extension'
+
+import typeorm from './config/typeorm'
+import { UsersModule } from './users/users.module'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+
+const isDev = process.env.MODE === 'DEV'
 
 @Module({
     imports: [
         UsersModule,
 
+        ConfigModule.forRoot({
+            isGlobal: true,
+            load: [typeorm]
+        }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => {
-                const isDev = process.env.MODE === 'DEV'
-                const options = {
-                    type: 'postgres',
-                    host: process.env.POSTGRES_HOST,
-                    port: parseInt(process.env.POSTGRES_PORT),
-                    username: process.env.POSTGRES_USER,
-                    password: process.env.POSTGRES_PASSWORD,
-                    database: process.env.POSTGRES_DB,
-
-                    // ref: https://medium.com/@gausmann.simon/nestjs-typeorm-and-postgresql-full-example-development-and-project-setup-working-with-database-c1a2b1b11b8f#:~:text=is%20able%20to-,synchronize,-your%20data%20model
-                    synchronize: isDev
-                } as const
+                const options = configService.get('typeorm')
 
                 await createDatabase({ options, initialDatabase: 'postgres', ifNotExist: true })
 
@@ -36,7 +32,10 @@ import { createDatabase } from 'typeorm-extension'
                 return {
                     ...options,
                     synchronize: isDev, // createDatabase overwrites original synchronize value
-                    autoLoadEntities: true
+                    migrations: ['./src/migrations/**/*{.js,.ts}'],
+                    autoLoadEntities: true,
+                    logging: false,
+                    logger: 'advanced-console'
                 }
             },
             inject: [ConfigService]

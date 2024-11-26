@@ -120,8 +120,8 @@ services:
             db:
                 condition: service_healthy
         volumes:
-            - ./src:/app/src
-
+            - ./user/src:/app/src
+            - ./user/src/migrations:/usr/src/app/src/migrations
 
     user-dev:
         profiles: [dev]
@@ -153,7 +153,8 @@ services:
             db:
                 condition: service_healthy
         volumes:
-            - ./src:/app/src
+            - ./user/src:/app/src
+            - ./user/src/migrations:/usr/src/app/src/migrations
 
     
     db:
