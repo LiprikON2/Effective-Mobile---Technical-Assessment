@@ -15,7 +15,7 @@ const config = {
     // Required for migration generation
     // ref: https://stackoverflow.com/a/59607836
     entities: ['./**/entities/**/*.js'],
-    // Works in general, but possibly not for generating migrations (?)
+    // Works in general, but not for the purpose of generating migrations
     autoLoadEntities: true,
     migrations: ['./**/migrations/**/*{.js,.ts}'],
     cli: {
