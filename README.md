@@ -1,4 +1,4 @@
-# Effective Mobile - Technical Assessment
+# Technical Assessment from Effective Mobile - Store stocks
 
 
 - [Effective Mobile - Technical Assessment](#effective-mobile---technical-assessment)
